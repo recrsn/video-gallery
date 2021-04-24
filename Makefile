@@ -8,7 +8,7 @@ all: video_gallery tests
 tests: video_gallery $(TEST_SRC) Pipfile Pipfile.lock .coveragerc mypy.ini pylintrc
 	mypy tests
 	pylint --disable=duplicate-code tests
-	pytest --cov=video_gallery --cov-report=term:skip-covered tests -v
+	pytest --cov=video_gallery --cov-report=term:skip-covered --cov-report=html tests -v
 	@touch tests
 
 video_gallery: $(SRC) Pipfile Pipfile.lock .coveragerc mypy.ini pylintrc

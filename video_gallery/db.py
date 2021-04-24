@@ -26,6 +26,10 @@ def persist(*args):
     db.session.add_all(args)  # pylint: disable=no-member
 
 
+def persist_all(args):
+    db.session.add_all(args)  # pylint: disable=no-member
+
+
 def delete(obj):
     db.session.delete(obj)  # pylint: disable=no-member
 

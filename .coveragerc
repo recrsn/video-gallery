@@ -2,6 +2,7 @@
 branch = True
 omit =
     video_gallery/wsgi.py
+    video_gallery/tasks.py
 
 [report]
 ignore_errors = True

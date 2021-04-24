@@ -10,6 +10,9 @@ flask-sqlalchemy = "*"
 sqlalchemy = "*"
 flask-migrate = "*"
 psycopg2-binary = "*"
+celery = "*"
+requests = "*"
+python-dateutil = "*"
 
 [dev-packages]
 pytest = "*"
@@ -18,6 +21,7 @@ mypy = "*"
 pylint = "*"
 pylint-flask-sqlalchemy = "*"
 testcontainers = {extras = ["postgresql"], version = "*"}
+pytest-mock = "*"
 
 [requires]
 python_version = "3.9"
