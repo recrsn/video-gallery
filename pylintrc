@@ -1,0 +1,39 @@
+[MASTER]
+
+fail-under = 10.0
+ignore = CVS
+
+;jobs=0
+persistent = yes
+suggestion-mode = yes
+;
+
+load-plugins =
+    pylint_flask_sqlalchemy
+
+disable =
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+    too-few-public-methods
+
+output-format = colorized
+
+[DESIGN]
+max-parents = 15
+
+[VARIABLES]
+init-import = no
+
+[FORMAT]
+expected-line-ending-format = LF
+ignore-long-lines = ^\s*(# )?<?https?://\S+>?$
+indent-after-paren = 4
+indent-string = '    '
+max-line-length = 100
+max-module-lines = 1000
+single-line-class-stmt = no
+single-line-if-stmt = no
+
+[BASIC]
+good-names = e,i,j,k,q,ex,id
