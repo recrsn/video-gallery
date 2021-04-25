@@ -93,3 +93,44 @@ def test_list_videos_returns_videos_with_limit(app, client):
         assert response.status == '200 OK'
         assert response.content_type == 'application/json'
         assert response.json == video_serializer.serialize_many(list(reversed(videos[-5:])))
+
+
+def test_get_video_returns_404_for_non_existent_video(app, client):
+    with app.app_context():
+        with db.transaction():
+            Video.query.delete()
+
+    response = client.get('/v1/videos/8b123b17-5198-4d0b-8a69-47d16ec6f679')
+
+    assert response.status == '404 NOT FOUND'
+    assert response.content_type == 'application/json'
+    assert response.json == {
+        "message": "Not found"
+    }
+
+
+def test_list_videos_return_videos_for_given_id(app, client):
+    with app.app_context():
+        with db.transaction():
+            Video.query.delete()
+            video = Video(
+                id='yt-1234-5678',
+                title='Video',
+                description='description',
+                thumbnail_url="https://example.com/74ced8c7.jpg",
+                published_at=datetime(year=2021, month=4, day=24, hour=23, minute=15, second=0,
+                                      tzinfo=timezone.utc)
+            )
+            db.persist(video)
+
+        response = client.get('/v1/videos/yt-1234-5678')
+
+        assert response.status == '200 OK'
+        assert response.content_type == 'application/json'
+        assert response.json == {
+            'id': 'yt-1234-5678',
+            'title': 'Video',
+            'description': 'description',
+            'thumbnailUrl': 'https://example.com/74ced8c7.jpg',
+            'publishedAt': '2021-04-24T23:15:00Z'
+        }

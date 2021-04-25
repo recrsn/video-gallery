@@ -1,13 +1,11 @@
-from datetime import timezone
-
-
 def serialize(video):
     return {
         'id': video.id,
         'title': video.title,
         'description': video.description,
-        'thumbnail_url': video.thumbnail_url,
-        'published_at': video.published_at.replace(tzinfo=timezone.utc).isoformat(),
+        'thumbnailUrl': video.thumbnail_url,
+        # UTC dates with Zulu
+        'publishedAt': video.published_at.isoformat().replace('+00:00', 'Z'),
     }
 
 

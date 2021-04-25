@@ -3,7 +3,7 @@ from flask import request, jsonify
 from flask.blueprints import Blueprint
 from sqlalchemy import desc
 
-from .responses import validation_error
+from .responses import validation_error, not_found
 from ..models import Video
 from ..serializers import video_serializer
 
@@ -35,3 +35,13 @@ def list_videos():
 
     return jsonify(video_serializer.serialize_many(
         query.order_by(desc(Video.published_at)).limit(limit).all()))
+
+
+@blueprint.route('/<video_id>', methods=['GET'])
+def get_video(video_id):
+    video = Video.query.filter_by(id=video_id).first()
+
+    if not video:
+        return not_found()
+
+    return jsonify(video_serializer.serialize(video))
