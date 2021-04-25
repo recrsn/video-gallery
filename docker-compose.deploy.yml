@@ -1,0 +1,30 @@
+version: '3'
+services:
+  app:
+    depends_on:
+      - rabbitmq
+    build: .
+    image: video_gallery
+    environment:
+      - DATABASE_URI=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/video-gallery
+  beat:
+    depends_on:
+      - rabbitmq
+    build: .
+    image: video_gallery
+    environment:
+      - DATABASE_URI=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/video-gallery
+      - VIDEO_UPDATE_INTERVAL_SECONDS=${VIDEO_UPDATE_INTERVAL_SECONDS}
+      - CELERY_BROKER_URI=amqp://rabbitmq:5672/
+    command: celery -A video_gallery.tasks beat -s /tmp/celerybeat-schedule.db
+  worker:
+    depends_on:
+      - rabbitmq
+    build: .
+    image: video_gallery
+    environment:
+      - DATABASE_URI=postgresql://postgres:${POSTGRES_PASSWORD}@db:5432/video-gallery
+      - YOUTUBE_API_KEY=${YOUTUBE_API_KEY}
+      - CELERY_BROKER_URI=amqp://rabbitmq:5672/
+    command: celery -A video_gallery.tasks worker
+

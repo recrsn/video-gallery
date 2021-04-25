@@ -13,6 +13,7 @@ psycopg2-binary = "*"
 celery = "*"
 requests = "*"
 python-dateutil = "*"
+gunicorn = "*"
 
 [dev-packages]
 pytest = "*"
