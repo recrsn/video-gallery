@@ -134,3 +134,72 @@ def test_list_videos_return_videos_for_given_id(app, client):
             'thumbnailUrl': 'https://example.com/74ced8c7.jpg',
             'publishedAt': '2021-04-24T23:15:00Z'
         }
+
+
+def test_list_videos_return_videos_for_given_search_string_in_title_and_description(app, client):
+    with app.app_context():
+        with db.transaction():
+            Video.query.delete()
+            videos = [
+                Video(
+                    id='yt-1234-5678',
+                    title='Video 1',
+                    description='Cat playing with yarn',
+                    thumbnail_url="https://example.com/74ced8c7.jpg",
+                    published_at=datetime(year=2021, month=4, day=24, hour=23, minute=15, second=0,
+                                          tzinfo=timezone.utc)
+                ),
+                Video(
+                    id='yt-29b79965-4468-497a-b076-d603607afeb7',
+                    title='Video of cats',
+                    description='description',
+                    thumbnail_url="https://example.com/74ced8c7.jpg",
+                    published_at=datetime(year=2021, month=4, day=24, hour=23, minute=15, second=25,
+                                          tzinfo=timezone.utc)
+                ),
+                Video(
+                    id='yt-c92f5a74-5561-4bf1-b713-f56723d22228',
+                    title='Awesome cats and dogs',
+                    description='Cats and dogs',
+                    thumbnail_url="https://example.com/74ced8c7.jpg",
+                    published_at=datetime(year=2021, month=4, day=24, hour=23, minute=15, second=25,
+                                          tzinfo=timezone.utc)
+                ),
+                Video(
+                    id='yt-1234',
+                    title='Dog Video',
+                    description='description',
+                    thumbnail_url="https://example.com/74ced8c7.jpg",
+                    published_at=datetime(year=2021, month=4, day=24, hour=23, minute=15, second=2,
+                                          tzinfo=timezone.utc)
+                ),
+            ]
+            db.persist_all(videos)
+
+        response = client.get('/v1/videos?q=cat')
+
+        assert response.status == '200 OK'
+        assert response.content_type == 'application/json'
+        assert response.json == [
+            {
+                'description': 'description',
+                'id': 'yt-29b79965-4468-497a-b076-d603607afeb7',
+                'publishedAt': '2021-04-24T23:15:25Z',
+                'thumbnailUrl': 'https://example.com/74ced8c7.jpg',
+                'title': 'Video of cats'
+            },
+            {
+                'description': 'Cats and dogs',
+                'id': 'yt-c92f5a74-5561-4bf1-b713-f56723d22228',
+                'publishedAt': '2021-04-24T23:15:25Z',
+                'thumbnailUrl': 'https://example.com/74ced8c7.jpg',
+                'title': 'Awesome cats and dogs'
+            },
+            {
+                'description': 'Cat playing with yarn',
+                'id': 'yt-1234-5678',
+                'publishedAt': '2021-04-24T23:15:00Z',
+                'thumbnailUrl': 'https://example.com/74ced8c7.jpg',
+                'title': 'Video 1'
+            }
+        ]

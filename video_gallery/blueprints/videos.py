@@ -28,10 +28,15 @@ def list_videos():
     if limit < 1:
         return validation_error('"limit" must be > 1')
 
+    search = request.args.get('q')
+
     query = Video.query
 
     if before:
         query = query.filter(Video.published_at <= before)
+
+    if search:
+        query = query.filter(Video.__ts_vector__.match(search))
 
     return jsonify(video_serializer.serialize_many(
         query.order_by(desc(Video.published_at)).limit(limit).all()))

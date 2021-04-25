@@ -1,5 +1,6 @@
-from sqlalchemy import desc
+from sqlalchemy import desc, Index
 
+from video_gallery.models.types.ts_vector import TSVector
 from ..db import db
 
 
@@ -9,6 +10,14 @@ class Video(db.Model):
     description = db.Column(db.Text(), nullable=False)
     thumbnail_url = db.Column(db.String(2048), nullable=False)
     published_at = db.Column(db.DateTime(timezone=True), nullable=False, index=True)
+
+    __ts_vector__ = db.Column(TSVector(),
+                              db.Computed("to_tsvector('english', title || ' ' || description)",
+                                          persisted=True))
+
+    __table_args__ = (
+        Index('ix_video___ts_vector__', __ts_vector__, postgresql_using='gin'),
+    )
 
     @staticmethod
     def latest() -> 'Video':
