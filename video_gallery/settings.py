@@ -29,5 +29,5 @@ def youtube_search_query():
     return os.getenv('YOUTUBE_SEARCH_QUERY', 'cats')
 
 
-def youtube_api_key():
-    return os.getenv('YOUTUBE_API_KEY')
+def youtube_api_keys():
+    return os.getenv('YOUTUBE_API_KEYS', '').split(',')

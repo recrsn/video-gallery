@@ -4,7 +4,7 @@ from .. import settings, db
 from ..clients.youtube import YouTubeClient
 from ..models import Video
 
-client = YouTubeClient(settings.youtube_api_key())
+client = YouTubeClient(settings.youtube_api_keys())
 
 
 def get_id_for_provider(_id):
