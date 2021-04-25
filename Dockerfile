@@ -3,10 +3,10 @@ FROM python:3.9
 WORKDIR /app
 RUN pip install pipenv
 
-COPY Pipfile* /app
+COPY Pipfile* ./
 RUN pipenv install --system --deploy
 
-COPY . /app
+COPY . ./
 
 USER 1000
 
